@@ -2,14 +2,14 @@ class Product {
   final int id;
   final String name;
   final String description;
-  final double price; // Add the price field
+  final double price; // Ensure that the price field is defined
   final String imagePath;
 
   Product({
     required this.id,
     required this.name,
     required this.description,
-    required this.price, // Add the price field
+    required this.price,
     required this.imagePath,
   });
 
@@ -18,7 +18,7 @@ class Product {
       'id': id,
       'name': name,
       'description': description,
-      'price': price, // Add the price field
+      'price': price,
       'imagePath': imagePath,
     };
   }

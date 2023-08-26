@@ -6,6 +6,7 @@ Image logoWidget(String imageName) {
     fit: BoxFit.fitWidth,
     width: 240,
     height: 240,
+    color: Colors.white,
   );
 }
 
@@ -55,7 +56,7 @@ Container signInSignUpButton(
         onTap();
       },
       child: Text(
-        isLogin ? 'LOG IN' : 'SIGN UP',
+        isLogin ? 'Iniciar Sesión' : 'Registrarse',
         style: const TextStyle(
           color: Colors.black87,
           fontWeight: FontWeight.bold,

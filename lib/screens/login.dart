@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vida_infinita/screens/home.dart';
 import 'package:vida_infinita/screens/register.dart';
 import 'package:vida_infinita/utils/color_utils.dart';
+import 'package:vida_infinita/screens/home_admin.dart';
+import 'package:vida_infinita/screens/home_comprador.dart';
 import 'package:vida_infinita/models/database_helper.dart';
 import 'package:vida_infinita/reusable_widgets/reusable_widget.dart';
 
@@ -49,10 +50,18 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (result.isNotEmpty) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-      );
+      final userRole = result.first['profile'];
+      if (userRole == 'admin') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeAdmin()),
+        );
+      } else if (userRole == 'comprador') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeComprador()),
+        );
+      }
     } else {
       showDialog(
         context: context,
@@ -97,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 30,
                 ),
                 reusableTextField(
-                  "UserName",
+                  "Usuario",
                   Icons.person_outline,
                   false,
                   _userNameTextController,
@@ -105,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 20,
                 ),
-                reusableTextField("Password", Icons.lock_outline, true,
+                reusableTextField("Contraseña", Icons.lock_outline, true,
                     _passwordTextController),
                 SizedBox(
                   height: 20,
@@ -124,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Don't have an account?",
+        const Text("No tiene cuenta?",
             style: TextStyle(
               color: Colors.white70,
             )),
@@ -136,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
             );
           },
           child: const Text(
-            " Sign Up",
+            " Regístrate",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         )
