@@ -39,7 +39,7 @@ class _HomeState extends State<HomeComprador> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Vida Saludable'),
+        title: Text('Vida Infinita'),
         actions: [
           IconButton(
             icon: Icon(Icons.exit_to_app),

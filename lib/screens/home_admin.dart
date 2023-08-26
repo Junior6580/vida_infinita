@@ -41,7 +41,7 @@ class _HomeState extends State<HomeAdmin> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Vida Saludable'),
+        title: const Text('Vida Infinita'),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),

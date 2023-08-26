@@ -1,9 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'dart:io'; // Importa esto para usar File
 import 'package:vida_infinita/models/product.dart';
 import 'package:vida_infinita/screens/home_admin.dart';
 import 'package:vida_infinita/screens/add_product.dart';
 import 'package:vida_infinita/models/database_helper.dart';
+
+void main() {
+  runApp(MaterialApp(home: ProductsAdmin()));
+}
 
 class ProductsAdmin extends StatefulWidget {
   @override
@@ -11,14 +15,27 @@ class ProductsAdmin extends StatefulWidget {
 }
 
 class _ProductListViewState extends State<ProductsAdmin> {
-  int currentIndex = 1; // Inicializa el índice actual
+  int currentIndex = 1;
+  String _deletedProductName = '';
+
+  void _deleteProduct(int productId, String productName) async {
+    await DatabaseProvider.instance.deleteProduct(productId);
+    setState(() {
+      _deletedProductName = productName;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Producto $_deletedProductName eliminado correctamente'),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Lista de Productos'),
-        automaticallyImplyLeading: false, // Esto oculta la flecha de retroceso
+        automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<List<Product>>(
         future: DatabaseProvider.instance.fetchProducts(),
@@ -38,21 +55,23 @@ class _ProductListViewState extends State<ProductsAdmin> {
                   title: Text(product.name),
                   subtitle:
                       Text('Precio: \$${product.price.toStringAsFixed(2)}'),
-                  leading: product.imagePath.startsWith(
-                          'assets/') // Verifica si la imagen es de la carpeta assets
+                  leading: product.imagePath.startsWith('assets/')
                       ? Image.asset(
-                          product
-                              .imagePath, // Ruta de la imagen en la carpeta assets
+                          product.imagePath,
                           width: 50,
                           height: 50,
                         )
                       : Image.file(
-                          File(product
-                              .imagePath), // Carga la imagen desde el almacenamiento
+                          File(product.imagePath),
                           width: 50,
                           height: 50,
                         ),
-                  // Agrega más información para mostrar si es necesario
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      _deleteProduct(product.id, product.name);
+                    },
+                  ),
                 );
               },
             );
@@ -94,8 +113,4 @@ class _ProductListViewState extends State<ProductsAdmin> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(home: ProductsAdmin()));
 }

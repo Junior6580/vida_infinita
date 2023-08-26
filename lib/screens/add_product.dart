@@ -17,11 +17,11 @@ class _AddProductState extends State<AddProduct> {
   final _formKey = GlobalKey<FormState>();
   late String _name = '';
   late String _description = '';
-  late double _price = 0.0; // Add the price field
+  late double _price = 0.0;
   late File _image = File('');
 
   final ImagePicker _picker = ImagePicker();
-  int currentIndex = 2; // Inicializa el índice actual
+  int currentIndex = 2;
 
   void _pickImage() async {
     final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
@@ -52,21 +52,44 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Registro Exitoso'),
+          content: Text('El producto se ha guardado correctamente.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProductsAdmin()),
+                );
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _saveProduct() async {
     if (_formKey.currentState!.validate()) {
       final product = Product(
         id: DateTime.now().millisecondsSinceEpoch,
         name: _name,
         description: _description,
-        price: _price, // Use the entered price
+        price: _price,
         imagePath: _image.path,
       );
 
       try {
         await DatabaseProvider.instance.insertProduct(product);
-        _showAlertDialog(
-            'Registro Exitoso', 'El producto se ha guardado correctamente.');
-        Navigator.pop(context);
+        _showSuccessDialog(); // Show the success dialog
       } catch (e) {
         _showAlertDialog(
             'Error al Guardar', 'Ocurrió un error al guardar el producto: $e');
