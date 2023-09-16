@@ -70,8 +70,7 @@ class _ProductListViewState extends State<ProductsComprador> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Precio: \$${product.price.toStringAsFixed(2)}'),
-                      Text(
-                          'Descripción: ${product.description}'), // Mostrar descripción
+                      Text('Descripción: ${product.description}'),
                     ],
                   ),
                   leading: product.imagePath.startsWith('assets/')
@@ -158,8 +157,17 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   void removeFromCart(Product product) {
-    widget.cartProducts.remove(product);
-    calculateTotal();
+    setState(() {
+      widget.cartProducts.remove(product);
+      calculateTotal();
+    });
+  }
+
+  void clearCart() {
+    setState(() {
+      widget.cartProducts.clear();
+      calculateTotal();
+    });
   }
 
   void sendWhatsAppMessage() async {
@@ -178,7 +186,6 @@ class _CartScreenState extends State<CartScreen> {
 
     if (await launch(whatsappUrl)) {
       await launch(whatsappUrl);
-      // Muestra un cuadro de diálogo de confirmación
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -189,9 +196,7 @@ class _CartScreenState extends State<CartScreen> {
             actions: [
               TextButton(
                 onPressed: () {
-                  // Limpia el carrito de compras
-                  widget.cartProducts.clear();
-                  calculateTotal();
+                  clearCart(); // Limpia el carrito al presionar OK
                   Navigator.of(context).pop();
                 },
                 child: Text('OK'),
@@ -201,7 +206,6 @@ class _CartScreenState extends State<CartScreen> {
         },
       );
     } else {
-      // Manejar el caso en el que no se pueda lanzar WhatsApp
       showDialog(
         context: context,
         builder: (BuildContext context) {
